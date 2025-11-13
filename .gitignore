@@ -1,0 +1,76 @@
+# This .gitignore is tailored for Unity projects.
+# It omits generated data, local caches, and IDE artifacts while keeping source assets.
+
+# Unity generated folders
+/Library/
+/Temp/
+/Obj/
+/Build/
+/Builds/
+/Logs/
+/UserSettings/
+/MemoryCaptures/
+
+# Asset bundles and caches
+/Assets/AssetStoreTools*
+/Assets/StreamingAssets/aa/
+/Assets/AddressableAssetsData/*/*.bin*
+/Assets/AddressableAssetsData/*/*.bin*.meta
+
+# MonoDevelop / Rider / Visual Studio
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+.idea/
+.vs/
+
+# Build artifacts
+*.apk
+*.aab
+*.app
+*.xcworkspace/
+*.xcconfig
+*.ipa
+*.dsym
+*.msi
+
+# Generated configuration
+/ProjectSettings/EditorBuildSettings.asset
+/ProjectSettings/ClothPhysicsParameters.asset
+/ProjectSettings/GraphicsSettings.asset
+
+# Crash and debug logs
+*.stacktrace
+crashlytics-build.properties
+
+# Unity Cloud Build
+/UnityCloudProjectID*
+
+# TextMesh Pro auto-generated files
+/Assets/TextMesh Pro/Resources/*
+
+# Lightmaps and GI
+*.exr
+LightingData.asset
+LightmapSnapshot.asset
+
+# Miscellaneous
+*.orig
+*.bak
+*.swp
+*.tmp
+*.blend1
+.DS_Store
+
+
