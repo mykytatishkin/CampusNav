@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1595bc52abab44a27a04e8dd5d551996, type: 3}
+  m_Name: Room_SRLI_403
+  m_EditorClassIdentifier: Assembly-CSharp::RoutePoint
+  pointName: Room_SRLI_403
+  buildingCode: SRL-I
+  floor: 4
+  roomNumber: 403
+  worldPosition: {x: 3.4, y: 18.1, z: -39.5}
+  category: 7
+  description: Office in SRL-I, floor 4
+  isAccessible: 1
