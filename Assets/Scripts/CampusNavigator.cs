@@ -24,6 +24,13 @@ public class CampusNavigator : MonoBehaviour
     public RoutePoint CurrentDestination => currentDestination;
     public bool HasPath => agent != null && (agent.hasPath || (graphPath != null && graphPath.Count > 1));
     public PathfindingMode ActiveMode => pathfindingMode;
+    public NavMeshAgent Agent => agent;
+
+    public void SetRouteDatabase(RouteDatabase database)
+    {
+        routeDatabase = database;
+        BuildGraph();
+    }
 
     public void SetPathfindingMode(PathfindingMode mode)
     {
