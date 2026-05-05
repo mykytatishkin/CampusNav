@@ -618,6 +618,8 @@ public static class IndoorNavigationBenchmark
     {
         var r = obj.GetComponent<Renderer>();
         if (r == null) return;
+        
+        // Create material with URP Lit shader - keep it simple like other generators
         var m = new Material(Shader.Find("Universal Render Pipeline/Lit"));
         m.SetColor("_BaseColor", col);
         r.sharedMaterial = m;
@@ -673,24 +675,8 @@ public static class IndoorNavigationBenchmark
             {
                 if (r != null)
                 {
-                    // Use transparency for hidden floors instead of completely hiding
-                    var mat = r.sharedMaterial;
-                    if (mat != null)
-                    {
-                        if (visible)
-                        {
-                            mat.SetFloat("_Surface", 0); // Opaque
-                            mat.SetFloat("_Blend", 0);
-                            mat.color = new Color(mat.color.r, mat.color.g, mat.color.b, 1f);
-                        }
-                        else
-                        {
-                            // Make very transparent but still slightly visible for context
-                            mat.SetFloat("_Surface", 1); // Transparent
-                            mat.SetFloat("_Blend", 0);
-                            mat.color = new Color(mat.color.r, mat.color.g, mat.color.b, 0.1f);
-                        }
-                    }
+                    // Enable/disable renderer based on floor visibility
+                    r.enabled = visible;
                 }
             }
         }

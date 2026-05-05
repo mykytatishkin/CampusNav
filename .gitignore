@@ -1,32 +1,36 @@
 ```
-# Unity specific ignores
+# Build artifacts
+*.dll
+*.exe
+*.pdb
+*.unitypackage
+
+# Dependencies
+Packages/
+ProjectSettings/
+
+# Logs
+*.log
+
+# Temp files
+*.tmp
+*.temp
+
+# User-specific
+UserSettings/
 Library/
-Temp/
-Obj/
-Build/
-*.unityproj
-*.sln
+
+# Configuration
+.vscode/
+.idea/
+*.suo
 *.user
 *.userprefs
-*.pidb
-*.booproj
-*.csproj
-*.meta
-*.prefab
-*.asset
-*.anim
-*.controller
-*.mat
-*.meta
-*.unity
-*.unitypackage
-*.log
-*.tmp
-*.cache
-.vs/
-.idea/
-*.swp
-*.swo
-.DS_Store
-Thumbs.db
+
+# Compressed files
+*.zip
+*.rar
+*.7z
+*.gz
+*.tar
 ```
