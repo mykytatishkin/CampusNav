@@ -1,36 +1,85 @@
 ```
-# Build artifacts
-*.dll
-*.exe
-*.pdb
-*.unitypackage
-
-# Dependencies
-Packages/
-ProjectSettings/
-
-# Logs
-*.log
-
-# Temp files
-*.tmp
-*.temp
-
-# User-specific
-UserSettings/
+# Unity-specific ignores
 Library/
-
-# Configuration
-.vscode/
-.idea/
-*.suo
+Temp/
+Obj/
+Build/
+*.unityproj
+*.sln
 *.user
 *.userprefs
+*.pidb
+*.booproj
+*.csproj
+*.meta
+
+# Editor backups
+*.bak
+*~
+.#*
+
+# Log files
+*.log
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Dependencies
+node_modules/
+Packages/manifest.json
+Packages/packages-lock.json
+
+# Build outputs
+build/
+dist/
+target/
+
+# Python artifacts (if applicable)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+
+# Compiled Binary files
+*.exe
+*.dll
+*.so
+*.dylib
+*.class
+*.o
+*.obj
+*.a
+*.lib
 
 # Compressed files
 *.zip
-*.rar
-*.7z
 *.gz
 *.tar
+*.tgz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.zst
+*.lz4
+*.lzh
+*.cab
+*.arj
+*.rpm
+*.deb
+*.Z
+*.lz
+*.lzo
+
+# OS generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
 ```
