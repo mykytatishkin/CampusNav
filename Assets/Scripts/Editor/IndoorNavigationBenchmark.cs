@@ -250,9 +250,6 @@ public static class IndoorNavigationBenchmark
         navSurface.transform.SetParent(root.transform);
         var surface = navSurface.AddComponent<NavMeshSurface>();
         surface.collectObjects = CollectObjects.All;
-        surface.agentRadius = 0.4f;
-        surface.agentHeight = 2f;
-        surface.agentClimb = 0.4f;
 
         // ===== INDOOR-SPECIFIC ROUTE DATABASE =====
         var routeDb = ScriptableObject.CreateInstance<RouteDatabase>();
