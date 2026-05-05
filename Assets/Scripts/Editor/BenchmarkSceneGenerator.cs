@@ -87,6 +87,15 @@ public static class BenchmarkSceneGenerator
         FloorSlab(bldA, "SlabA_F3", V(0, F * 2, 0), 30, 20, new Color(0.85f, 0.83f, 0.80f));
         // Roof
         FloorSlab(bldA, "RoofA", V(0, F * 3 + 0.1f, 0), 31, 21, new Color(0.50f, 0.43f, 0.36f));
+        
+        // Add vertical links for Building A
+        for (int i = 0; i < 3; i++)
+        {
+            Vector3 bottom = V(10, i * F + 0.1f, -5);
+            Vector3 top = V(10, (i + 1) * F + 0.1f, -5);
+            AddNavMeshLink(bldA, "A", $"LinkA_F{i+1}_F{i+2}", bottom, top, i + 1, i + 2);
+        }
+        
         bldA.AddComponent<BuildingRevealer>();
 
         // --- Building B (east, on north plateau y=0) ---
@@ -102,6 +111,10 @@ public static class BenchmarkSceneGenerator
         WallBox(bldB, "WallB_W_bot", V(-12.5f, F, -12), Wall, F * 2, 11, wallCol);
         FloorSlab(bldB, "SlabB_F2", V(0, F, 0), 25, 35, new Color(0.85f, 0.83f, 0.80f));
         FloorSlab(bldB, "RoofB", V(0, F * 2 + 0.1f, 0), 26, 36, new Color(0.50f, 0.43f, 0.36f));
+        
+        // Add vertical links for Building B
+        AddNavMeshLink(bldB, "B", "LinkB_F1_F2", V(0, 0.1f, 0), V(0, F + 0.1f, 0), 1, 2);
+        
         bldB.AddComponent<BuildingRevealer>();
 
         // --- Building C (south, on south plateau y=4) ---
@@ -117,6 +130,15 @@ public static class BenchmarkSceneGenerator
         for (int i = 1; i <= 3; i++)
             FloorSlab(bldC, $"SlabC_F{i + 1}", V(0, F * i, 0), 50, 15, new Color(0.85f, 0.83f, 0.80f));
         FloorSlab(bldC, "RoofC", V(0, F * 4 + 0.1f, 0), 51, 16, new Color(0.50f, 0.43f, 0.36f));
+        
+        // Add vertical links for Building C
+        for (int i = 0; i < 4; i++)
+        {
+            Vector3 bottom = V(-20, i * F + 0.1f, 0);
+            Vector3 top = V(-20, (i + 1) * F + 0.1f, 0);
+            AddNavMeshLink(bldC, "C", $"LinkC_F{i+1}_F{i+2}", bottom, top, i + 1, i + 2);
+        }
+        
         bldC.AddComponent<BuildingRevealer>();
 
         // ===== OUTDOOR PATHS (respect terrain heights) =====
@@ -456,6 +478,22 @@ public static class BenchmarkSceneGenerator
         b.transform.localScale = V(w, 0.08f, d);
         SetMat(b, col);
         b.isStatic = true;
+    }
+
+    static void AddNavMeshLink(GameObject parent, string bldCode, string name, Vector3 start, Vector3 end, int f1, int f2)
+    {
+        var linkObj = new GameObject(name);
+        linkObj.transform.SetParent(parent.transform);
+        linkObj.transform.localPosition = start;
+
+        var link = linkObj.AddComponent<NavMeshLink>();
+        link.startPoint = Vector3.zero;
+        link.endPoint = end - start;
+        link.width = 3.0f;
+        link.bidirectional = true;
+
+        var el = linkObj.AddComponent<ElevatorLink>();
+        el.Initialize(bldCode, f1, f2);
     }
 
     static void Ramp(GameObject parent, string name, Vector3 top, Vector3 bottom, float width, Color col)

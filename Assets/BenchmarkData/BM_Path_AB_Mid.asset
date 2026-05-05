@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: 
   floor: 1
   roomNumber: 
-  worldPosition: {x: 5, y: 0.1, z: 30}
+  worldPosition: {x: 5, y: 0.1, z: 35}
   category: 9
   description: 
   isAccessible: 1

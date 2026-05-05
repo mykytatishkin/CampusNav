@@ -18,6 +18,14 @@ public class ElevatorLink : MonoBehaviour
     public bool RequiresElevator => requiresElevator;
     public bool IsAccessible => isAccessible;
 
+    public void Initialize(string bld, int f1, int f2, bool elevator = true)
+    {
+        buildingCode = bld;
+        fromFloor = f1;
+        toFloor = f2;
+        requiresElevator = elevator;
+    }
+
     void Awake()
     {
         navLink = GetComponent<NavMeshLink>();

@@ -11,6 +11,12 @@ public class NavMeshPathfinder : IPathfinder
     {
         var sw = Stopwatch.StartNew();
 
+        // Ensure points are on NavMesh
+        if (NavMesh.SamplePosition(start, out var startHit, 3.0f, NavMesh.AllAreas))
+            start = startHit.position;
+        if (NavMesh.SamplePosition(end, out var endHit, 3.0f, NavMesh.AllAreas))
+            end = endHit.position;
+
         var path = new NavMeshPath();
         bool found = NavMesh.CalculatePath(start, end, NavMesh.AllAreas, path);
 

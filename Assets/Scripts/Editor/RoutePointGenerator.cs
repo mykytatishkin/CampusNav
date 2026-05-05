@@ -183,6 +183,18 @@ public static class RoutePointGenerator
         allPoints.Add(Create("Library_SRK1", "SRK-I", 2, "LB01",
             new Vector3(-45, TerrainY(60) + F + 0.1f, 60), RoutePointCategory.Library, "Library in SRK-I, 2nd floor"));
 
+        // ===== NAVIGATION WAYPOINTS (Outdoor grid to allow steering around buildings) =====
+        for (float x = -100; x <= 100; x += 25)
+        {
+            for (float z = -60; z <= 90; z += 25)
+            {
+                // Shift grid slightly to not be perfectly aligned with buildings
+                float ox = x + 5, oz = z + 5;
+                allPoints.Add(Create($"WP_{ox}_{oz}", "", 0, "WP",
+                    new Vector3(ox, TerrainY(oz) + 0.1f, oz), RoutePointCategory.Other, "Navigation waypoint"));
+            }
+        }
+
         // ===== Save all to database =====
         var dbGuids = AssetDatabase.FindAssets("t:RouteDatabase");
         RouteDatabase db = null;

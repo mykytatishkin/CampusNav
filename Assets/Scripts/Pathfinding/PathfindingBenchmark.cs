@@ -40,6 +40,12 @@ public class PathfindingBenchmark : MonoBehaviour
     public List<BenchmarkEntry> BenchmarkLog => benchmarkLog;
     public List<PathResult> LastResults => lastResults;
 
+    [ContextMenu("Run Full Benchmark")]
+    public void RunFullBenchmarkFromMenu()
+    {
+        RunFullBenchmark();
+    }
+
     void Start()
     {
         RebuildGraph();
@@ -69,7 +75,12 @@ public class PathfindingBenchmark : MonoBehaviour
 
         if (graph == null || graph.Nodes.Count == 0)
         {
-            Debug.LogWarning("[Benchmark] Graph not built yet.");
+            RebuildGraph();
+        }
+
+        if (graph == null || graph.Nodes.Count == 0)
+        {
+            Debug.LogWarning("[Benchmark] Graph building failed.");
             return lastResults;
         }
 

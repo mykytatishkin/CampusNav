@@ -94,7 +94,7 @@ public class NavigationGraph
         {
             if (rp == null) continue;
             AddNode(rp.worldPosition, rp.pointName, rp.floor, rp.buildingCode,
-                rp.category == RoutePointCategory.Elevator);
+                rp.category == RoutePointCategory.Elevator || rp.category == RoutePointCategory.Stairs);
         }
 
         // Connect nodes
@@ -114,21 +114,24 @@ public class NavigationGraph
                 // Both outdoor / corridor nodes — connect generously
                 if (aOutdoor && bOutdoor && dist < maxConnectionDistance * 3f)
                 {
-                    AddEdge(a, b);
+                    if (CanConnect(a.Position, b.Position))
+                        AddEdge(a, b);
                     continue;
                 }
 
                 // One outdoor, one building — connect if nearby (entrance links)
                 if ((aOutdoor || bOutdoor) && dist < maxConnectionDistance * 2f)
                 {
-                    AddEdge(a, b, dist * 1.1f);
+                    if (CanConnect(a.Position, b.Position))
+                        AddEdge(a, b, dist * 1.1f);
                     continue;
                 }
 
                 // Same building, same floor
                 if (sameBuilding && sameFloor && dist < maxConnectionDistance)
                 {
-                    AddEdge(a, b);
+                    if (CanConnect(a.Position, b.Position))
+                        AddEdge(a, b);
                     continue;
                 }
 
@@ -144,9 +147,36 @@ public class NavigationGraph
                 if (!sameBuilding && !aOutdoor && !bOutdoor && sameFloor
                     && dist < maxConnectionDistance * 1.5f)
                 {
-                    AddEdge(a, b, dist * 1.2f);
+                    if (CanConnect(a.Position, b.Position))
+                        AddEdge(a, b, dist * 1.2f);
                 }
             }
         }
+    }
+
+    bool CanConnect(Vector3 a, Vector3 b)
+    {
+        // Lift points slightly more to avoid hitting the floor and small obstacles
+        Vector3 start = a + Vector3.up * 0.8f;
+        Vector3 end = b + Vector3.up * 0.8f;
+
+        // Check if anything (walls, buildings) is between the points
+        // Use a raycast to see if we hit anything static
+        if (Physics.Linecast(start, end, out var hit))
+        {
+            // If we hit a trigger (like the building revealer), we should probably ignore it
+            if (hit.collider.isTrigger)
+            {
+                // If it's a trigger, try a more expensive RaycastAll to see if there's a real wall behind it
+                var hits = Physics.RaycastAll(start, (end - start).normalized, Vector3.Distance(start, end));
+                foreach (var h in hits)
+                {
+                    if (!h.collider.isTrigger) return false;
+                }
+                return true;
+            }
+            return false;
+        }
+        return true;
     }
 }

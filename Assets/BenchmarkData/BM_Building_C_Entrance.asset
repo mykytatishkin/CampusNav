@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoutePoint
   pointName: Building_C_Entrance
   buildingCode: C
-  floor: 1
+  floor: 2
   roomNumber: 
-  worldPosition: {x: 0, y: 0.1, z: -33}
+  worldPosition: {x: 0, y: 4.1, z: -33}
   category: 0
   description: 
   isAccessible: 1

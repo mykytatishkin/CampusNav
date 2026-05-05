@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1595bc52abab44a27a04e8dd5d551996, type: 3}
-  m_Name: BM_Building_C_Inside
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoutePoint
   pointName: Building_C_Inside
   buildingCode: C
-  floor: 1
+  floor: 2
   roomNumber: 
-  worldPosition: {x: 0, y: 0.1, z: -40}
+  worldPosition: {x: 0, y: 4.1, z: -40}
   category: 9
   description: 
   isAccessible: 1

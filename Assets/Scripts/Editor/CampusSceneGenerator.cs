@@ -178,7 +178,8 @@ public static class CampusSceneGenerator
         // ==========================================================
         var player = new GameObject("Player");
         player.transform.SetParent(root.transform);
-        player.transform.position = V(-50, TerrainY(69) + 0.1f, 69); // at main entrance
+        // Position at the central walkway for better visibility
+        player.transform.position = V(5, TerrainY(20) + 1.2f, 20); 
         player.tag = "Player";
 
         var capsule = GameObject.CreatePrimitive(PrimitiveType.Capsule);
@@ -187,12 +188,16 @@ public static class CampusSceneGenerator
         capsule.transform.localPosition = V(0, 1, 0);
         capsule.transform.localScale = V(0.8f, 1, 0.8f);
         SetMat(capsule, new Color(0.2f, 0.6f, 1f));
+        capsule.tag = "Player";
 
         var agent = player.AddComponent<NavMeshAgent>();
         agent.speed = 3.5f;
         agent.radius = 0.5f;
         agent.height = 2f;
+        agent.acceleration = 12f;
         agent.angularSpeed = 360f;
+        agent.stoppingDistance = 0.5f;
+        agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
 
         // ==========================================================
         //  CAMERA with CampusCameraController
@@ -204,11 +209,12 @@ public static class CampusSceneGenerator
             camObj.AddComponent<Camera>();
             camObj.tag = "MainCamera";
         }
-        camObj.transform.position = V(0, 60, -30);
-        camObj.transform.rotation = Quaternion.Euler(65, 0, 0);
-
+        
         var camCtrl = camObj.GetComponent<CampusCameraController>();
         if (camCtrl == null) camCtrl = camObj.AddComponent<CampusCameraController>();
+        camCtrl.SwitchMode(CampusCameraController.CameraMode.Free);
+        camCtrl.FocusOn(V(0, 5, 20));
+        camCtrl.SetOrbit(45f, 60f, 60f);
 
         var so = new SerializedObject(camCtrl);
         so.FindProperty("target").objectReferenceValue = player.transform;
@@ -283,17 +289,98 @@ public static class CampusSceneGenerator
         navSurface.transform.SetParent(root.transform);
         var surface = navSurface.AddComponent<NavMeshSurface>();
         surface.collectObjects = CollectObjects.All;
+        
         // Bake includes static geometry; interior floors are walkable where doorways exist (see Building).
 
         // ==========================================================
-        //  ADD BuildingRevealer TO EACH BUILDING
+        //  UI & APP FLOW
         // ==========================================================
-        foreach (Transform child in bldGroup.transform)
-            child.gameObject.AddComponent<BuildingRevealer>();
+        var canvasObj = new GameObject("UI_Canvas");
+        canvasObj.transform.SetParent(root.transform);
+        var canvas = canvasObj.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvasObj.AddComponent<UnityEngine.UI.CanvasScaler>().uiScaleMode = UnityEngine.UI.CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        canvasObj.AddComponent<UnityEngine.UI.GraphicRaycaster>();
+
+        // EventSystem - ensure it exists and has a module
+        var esObj = GameObject.Find("EventSystem");
+        if (esObj == null) esObj = new GameObject("EventSystem");
+        if (esObj.GetComponent<UnityEngine.EventSystems.EventSystem>() == null)
+            esObj.AddComponent<UnityEngine.EventSystems.EventSystem>();
+        
+        // Add both modules for compatibility, or the best one available
+        if (esObj.GetComponent<UnityEngine.EventSystems.BaseInputModule>() == null)
+        {
+            // Try new input system first if available
+            var actionsAsset = AssetDatabase.LoadAssetAtPath<UnityEngine.InputSystem.InputActionAsset>("Assets/InputSystem_Actions.inputactions");
+            if (actionsAsset != null)
+            {
+                var module = esObj.AddComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
+                module.actionsAsset = actionsAsset;
+            }
+            else
+            {
+                esObj.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
+            }
+        }
+
+        var flowObj = new GameObject("AppFlowManager");
+        flowObj.transform.SetParent(root.transform);
+        var flow = flowObj.AddComponent<AppFlowManager>();
+
+        // Create Screens
+        var mm = CreateScreen(canvasObj, "MainMenuScreen").AddComponent<MainMenuScreen>();
+        var cs = CreateScreen(canvasObj, "CampusSelectScreen").AddComponent<CampusSelectScreen>();
+        var ds = CreateScreen(canvasObj, "DestinationSelectScreen").AddComponent<DestinationSelectScreen>();
+        var sp = CreateScreen(canvasObj, "StartPointScreen").AddComponent<StartPointScreen>();
+        var ns = CreateScreen(canvasObj, "NavigationScreen").AddComponent<NavigationScreen>();
+
+        // Link Flow Manager
+        var flowSO = new SerializedObject(flow);
+        flowSO.FindProperty("mainMenuScreen").objectReferenceValue = mm;
+        flowSO.FindProperty("campusSelectScreen").objectReferenceValue = cs;
+        flowSO.FindProperty("destinationSelectScreen").objectReferenceValue = ds;
+        flowSO.FindProperty("startPointScreen").objectReferenceValue = sp;
+        flowSO.FindProperty("navigationScreen").objectReferenceValue = ns;
+        flowSO.FindProperty("navigator").objectReferenceValue = navigator;
+        flowSO.FindProperty("geoAnchor").objectReferenceValue = geoAnchor;
+        flowSO.FindProperty("playerTracker").objectReferenceValue = geoTracker;
+        flowSO.FindProperty("cameraController").objectReferenceValue = camCtrl;
+        flowSO.FindProperty("campusWorldRoot").objectReferenceValue = root;
+        
+        // Ensure we have a CampusData asset
+        string cdPath = "Assets/Resources/MainCampusData.asset";
+        if (!AssetDatabase.IsValidFolder("Assets/Resources")) AssetDatabase.CreateFolder("Assets", "Resources");
+        var cd = AssetDatabase.LoadAssetAtPath<CampusData>(cdPath);
+        if (cd == null)
+        {
+            cd = ScriptableObject.CreateInstance<CampusData>();
+            cd.campusName = "Vilnius Tech - Saulėtekio Rūmai";
+            cd.routeDatabase = AssetDatabase.LoadAssetAtPath<RouteDatabase>("Assets/RouteDatabase.asset");
+            AssetDatabase.CreateAsset(cd, cdPath);
+        }
+        
+        var campusArray = flowSO.FindProperty("availableCampuses");
+        campusArray.arraySize = 1;
+        campusArray.GetArrayElementAtIndex(0).objectReferenceValue = cd;
+        
+        flowSO.ApplyModifiedPropertiesWithoutUndo();
 
         Selection.activeGameObject = root;
         EditorUtility.SetDirty(root);
         Debug.Log("[CampusNav] Scene: tiered ground + boundary planks, buildings with north doorway for NavMesh, Bake NavMeshSurface when ready.");
+    }
+
+    static GameObject CreateScreen(GameObject canvas, string name)
+    {
+        var obj = new GameObject(name);
+        obj.transform.SetParent(canvas.transform, false);
+        var rect = obj.AddComponent<RectTransform>();
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = Vector2.zero;
+        rect.offsetMax = Vector2.zero;
+        return obj;
     }
 
     // ======================== HELPERS ========================
@@ -336,11 +423,23 @@ public static class CampusSceneGenerator
         for (int i = 1; i < floors; i++)
             Box(bld, $"Slab_F{i}", V(0, i * F, 0), V(w - 0.2f, 0.12f, d - 0.2f), C.Slab);
 
+        // Vertical connections (Elevators/Stairs)
+        float swX = -w * 0.35f;
+        float swZ = d * 0.35f;
+        for (int i = 0; i < floors - 1; i++)
+        {
+            Vector3 bottom = V(swX, i * F + 0.1f, swZ);
+            Vector3 top = V(swX, (i + 1) * F + 0.1f, swZ);
+            AddNavMeshLink(bld, name, $"Link_F{i + 1}_F{i + 2}", bottom, top, i + 1, i + 2);
+        }
+
         // Trigger collider for BuildingRevealer
         var col = bld.AddComponent<BoxCollider>();
         col.center = V(0, h / 2, 0);
         col.size = V(w + 6, h + 4, d + 6);
         col.isTrigger = true;
+
+        bld.AddComponent<BuildingRevealer>();
 
         return bld;
     }
@@ -602,6 +701,22 @@ public static class CampusSceneGenerator
         return b;
     }
 
+    static void AddNavMeshLink(GameObject parent, string bldCode, string name, Vector3 start, Vector3 end, int f1, int f2)
+    {
+        var linkObj = new GameObject(name);
+        linkObj.transform.SetParent(parent.transform);
+        linkObj.transform.localPosition = start;
+
+        var link = linkObj.AddComponent<NavMeshLink>();
+        link.startPoint = Vector3.zero;
+        link.endPoint = end - start;
+        link.width = 3.0f;
+        link.bidirectional = true;
+
+        var el = linkObj.AddComponent<ElevatorLink>();
+        el.Initialize(bldCode, f1, f2);
+    }
+
     static GameObject Prim(GameObject parent, string name, PrimitiveType type, Vector3 pos, Vector3 scale, Color col)
     {
         var obj = GameObject.CreatePrimitive(type);
@@ -624,8 +739,19 @@ public static class CampusSceneGenerator
     {
         var r = obj.GetComponent<Renderer>();
         if (r == null) return;
-        var m = new Material(Shader.Find("Universal Render Pipeline/Lit"));
-        m.SetColor("_BaseColor", col);
+        
+        // Try URP first, then Standard, then any fallback
+        var shader = Shader.Find("Universal Render Pipeline/Lit");
+        if (shader == null) shader = Shader.Find("Standard");
+        if (shader == null) shader = Shader.Find("Legacy Shaders/Diffuse");
+        if (shader == null) shader = Shader.Find("Hidden/InternalErrorShader");
+        
+        var m = new Material(shader);
+        if (shader != null && shader.name.Contains("Universal Render Pipeline"))
+            m.SetColor("_BaseColor", col);
+        else if (m.HasProperty("_Color"))
+            m.SetColor("_Color", col);
+            
         r.sharedMaterial = m;
     }
 

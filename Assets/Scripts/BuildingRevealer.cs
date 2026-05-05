@@ -42,7 +42,14 @@ public class BuildingRevealer : MonoBehaviour
 
                 fadeMats[i] = new Material(shader);
                 if (src != null)
-                    fadeMats[i].SetColor("_BaseColor", src.GetColor("_BaseColor"));
+                {
+                    Color col = Color.white;
+                    if (src.HasProperty("_BaseColor")) col = src.GetColor("_BaseColor");
+                    else if (src.HasProperty("_Color")) col = src.GetColor("_Color");
+
+                    if (fadeMats[i].HasProperty("_BaseColor")) fadeMats[i].SetColor("_BaseColor", col);
+                    else if (fadeMats[i].HasProperty("_Color")) fadeMats[i].SetColor("_Color", col);
+                }
                 fadeMats[i].SetFloat(dissolveProperty, 0f);
             }
 
