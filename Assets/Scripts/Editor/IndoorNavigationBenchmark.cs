@@ -628,14 +628,27 @@ public static class IndoorNavigationBenchmark
     // Floor visibility controller - makes floors above/below player transparent
     public class FloorVisibilityController : MonoBehaviour
     {
-        [SerializeField] private GameObject[] floorGroups = new GameObject[0];
+        [Tooltip("List of floor groups (each group contains all objects for one floor level)")]
+        public GameObject[] floorGroups = new GameObject[0];
+        
+        [Tooltip("Transparency alpha for inactive floors (0.0 = invisible, 1.0 = fully visible)")]
+        [Range(0.0f, 1.0f)]
+        public float inactiveAlpha = 0.15f;
+        
+        [Tooltip("Alpha for active floor (should be 1.0)")]
+        [Range(0.0f, 1.0f)]
+        public float activeAlpha = 1.0f;
+        
         private Transform playerTransform;
         private int currentFloor = 0;
         private const float FloorHeight = 3.5f;
+        private Dictionary<Renderer, Color> originalColors = new Dictionary<Renderer, Color>();
+        private Dictionary<Renderer, Material> originalMaterials = new Dictionary<Renderer, Material>();
         
         void Start()
         {
             playerTransform = transform;
+            CacheOriginalMaterials();
             UpdateFloorVisibility();
         }
         
@@ -644,8 +657,31 @@ public static class IndoorNavigationBenchmark
             UpdateFloorVisibility();
         }
         
+        void CacheOriginalMaterials()
+        {
+            originalColors.Clear();
+            originalMaterials.Clear();
+            
+            foreach (GameObject floorGroup in floorGroups)
+            {
+                if (floorGroup == null) continue;
+                
+                Renderer[] renderers = floorGroup.GetComponentsInChildren<Renderer>(true);
+                foreach (Renderer rend in renderers)
+                {
+                    if (rend != null && rend.sharedMaterial != null)
+                    {
+                        originalColors[rend] = rend.sharedMaterial.color;
+                        originalMaterials[rend] = rend.sharedMaterial;
+                    }
+                }
+            }
+        }
+        
         void UpdateFloorVisibility()
         {
+            if (playerTransform == null) return;
+            
             float playerY = playerTransform.position.y;
             int newFloor = Mathf.FloorToInt(playerY / FloorHeight);
             newFloor = Mathf.Clamp(newFloor, 0, floorGroups.Length - 1);
@@ -663,20 +699,45 @@ public static class IndoorNavigationBenchmark
             {
                 if (floorGroups[i] == null) continue;
                 
-                bool isVisible = (i == currentFloor);
-                SetGroupVisible(floorGroups[i], isVisible);
-            }
-        }
-        
-        void SetGroupVisible(GameObject group, bool visible)
-        {
-            var renderers = group.GetComponentsInChildren<Renderer>(true);
-            foreach (var r in renderers)
-            {
-                if (r != null)
+                bool isActiveFloor = (i == currentFloor);
+                float targetAlpha = isActiveFloor ? activeAlpha : inactiveAlpha;
+                
+                Renderer[] renderers = floorGroups[i].GetComponentsInChildren<Renderer>(true);
+                foreach (Renderer rend in renderers)
                 {
-                    // Enable/disable renderer based on floor visibility
-                    r.enabled = visible;
+                    if (rend == null || rend.sharedMaterial == null) continue;
+                    
+                    // Get original color
+                    Color originalColor;
+                    if (originalColors.TryGetValue(rend, out originalColor))
+                    {
+                        // Create material instance for this renderer
+                        Material mat = rend.material;
+                        
+                        // Set alpha
+                        mat.color = new Color(originalColor.r, originalColor.g, originalColor.b, targetAlpha);
+                        
+                        // Configure transparency
+                        if (targetAlpha < 1.0f)
+                        {
+                            mat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+                            mat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                            mat.SetInt("_ZWrite", 0);
+                            mat.DisableKeyword("_ALPHATEST_ON");
+                            mat.EnableKeyword("_ALPHABLEND_ON");
+                            mat.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+                            mat.renderQueue = 3000;
+                        }
+                        else
+                        {
+                            // Reset to opaque
+                            mat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+                            mat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
+                            mat.SetInt("_ZWrite", 1);
+                            mat.DisableKeyword("_ALPHABLEND_ON");
+                            mat.renderQueue = -1;
+                        }
+                    }
                 }
             }
         }
