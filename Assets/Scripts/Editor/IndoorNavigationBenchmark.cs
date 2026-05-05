@@ -1,11 +1,13 @@
 using UnityEngine;
 using UnityEditor;
 using Unity.AI.Navigation;
+using System.Collections.Generic;
 
 /// <summary>
 /// Generates an additional benchmark scene focused specifically on indoor navigation testing.
 /// This scene is isolated and won't affect any other scenes.
 /// Features: Multi-room layouts, corridors, doorways, stairs, elevators across multiple floors.
+/// Includes dynamic floor visibility system - floors above/below player become transparent.
 /// </summary>
 public static class IndoorNavigationBenchmark
 {
@@ -37,6 +39,9 @@ public static class IndoorNavigationBenchmark
         building.transform.SetParent(root.transform);
         building.isStatic = true;
 
+        // Track floor groups for visibility system
+        var floorGroups = new List<GameObject>();
+
         Color wallColor = new Color(0.92f, 0.90f, 0.88f);
         Color floorColor = new Color(0.88f, 0.85f, 0.82f);
         Color doorColor = new Color(0.75f, 0.65f, 0.55f);
@@ -44,6 +49,7 @@ public static class IndoorNavigationBenchmark
         // --- Ground Floor Layout ---
         var floor0Group = Child(building, "Floor_0");
         floor0Group.transform.position = V(0, 0.05f, 0);
+        floorGroups.Add(floor0Group);
         
         // Outer walls
         CreateWall(floor0Group, "OuterWall_N", V(0, FloorHeight * 1.5f, 20), 60, FloorHeight * 3, WallThickness, wallColor);
@@ -81,6 +87,7 @@ public static class IndoorNavigationBenchmark
         // --- First Floor Layout ---
         var floor1Group = Child(building, "Floor_1");
         floor1Group.transform.position = V(0, FloorHeight + 0.05f, 0);
+        floorGroups.Add(floor1Group);
         
         // Floor slab
         CreateFloorSlab(building, "Floor1_Slab", V(0, FloorHeight, 0), 58f, 38f, floorColor).isStatic = true;
@@ -107,6 +114,7 @@ public static class IndoorNavigationBenchmark
         // --- Second Floor Layout ---
         var floor2Group = Child(building, "Floor_2");
         floor2Group.transform.position = V(0, FloorHeight * 2 + 0.05f, 0);
+        floorGroups.Add(floor2Group);
         
         // Floor slab
         CreateFloorSlab(building, "Floor2_Slab", V(0, FloorHeight * 2, 0), 58f, 38f, floorColor).isStatic = true;
@@ -226,6 +234,14 @@ public static class IndoorNavigationBenchmark
         agent.height = 2f;
         agent.angularSpeed = 360f;
         agent.acceleration = 20f;
+
+        // ===== FLOOR VISIBILITY CONTROLLER =====
+        var visibilityCtrl = player.AddComponent<FloorVisibilityController>();
+        var visSO = new SerializedObject(visibilityCtrl);
+        visSO.FindProperty("floorGroups").arraySize = floorGroups.Count;
+        for (int i = 0; i < floorGroups.Count; i++)
+            visSO.FindProperty("floorGroups").GetArrayElementAtIndex(i).objectReferenceValue = floorGroups[i];
+        visSO.ApplyModifiedPropertiesWithoutUndo();
 
         // ===== CAMERA =====
         var camObj = GameObject.Find("Main Camera");
@@ -605,5 +621,78 @@ public static class IndoorNavigationBenchmark
         var m = new Material(Shader.Find("Universal Render Pipeline/Lit"));
         m.SetColor("_BaseColor", col);
         r.sharedMaterial = m;
+    }
+
+    // Floor visibility controller - makes floors above/below player transparent
+    public class FloorVisibilityController : MonoBehaviour
+    {
+        [SerializeField] private GameObject[] floorGroups = new GameObject[0];
+        private Transform playerTransform;
+        private int currentFloor = 0;
+        private const float FloorHeight = 3.5f;
+        
+        void Start()
+        {
+            playerTransform = transform;
+            UpdateFloorVisibility();
+        }
+        
+        void LateUpdate()
+        {
+            UpdateFloorVisibility();
+        }
+        
+        void UpdateFloorVisibility()
+        {
+            float playerY = playerTransform.position.y;
+            int newFloor = Mathf.FloorToInt(playerY / FloorHeight);
+            newFloor = Mathf.Clamp(newFloor, 0, floorGroups.Length - 1);
+            
+            if (newFloor != currentFloor)
+            {
+                currentFloor = newFloor;
+                ApplyVisibility();
+            }
+        }
+        
+        void ApplyVisibility()
+        {
+            for (int i = 0; i < floorGroups.Length; i++)
+            {
+                if (floorGroups[i] == null) continue;
+                
+                bool isVisible = (i == currentFloor);
+                SetGroupVisible(floorGroups[i], isVisible);
+            }
+        }
+        
+        void SetGroupVisible(GameObject group, bool visible)
+        {
+            var renderers = group.GetComponentsInChildren<Renderer>(true);
+            foreach (var r in renderers)
+            {
+                if (r != null)
+                {
+                    // Use transparency for hidden floors instead of completely hiding
+                    var mat = r.sharedMaterial;
+                    if (mat != null)
+                    {
+                        if (visible)
+                        {
+                            mat.SetFloat("_Surface", 0); // Opaque
+                            mat.SetFloat("_Blend", 0);
+                            mat.color = new Color(mat.color.r, mat.color.g, mat.color.b, 1f);
+                        }
+                        else
+                        {
+                            // Make very transparent but still slightly visible for context
+                            mat.SetFloat("_Surface", 1); // Transparent
+                            mat.SetFloat("_Blend", 0);
+                            mat.color = new Color(mat.color.r, mat.color.g, mat.color.b, 0.1f);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
