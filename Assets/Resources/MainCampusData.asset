@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e790f550675d945129b5e0bbada82cb4, type: 3}
+  m_Name: MainCampusData
+  m_EditorClassIdentifier: Assembly-CSharp::CampusData
+  campusName: "Vilnius Tech - Saul\u0117tekio R\u016Bmai"
+  campusCode: SR
+  address: "Saul\u0117tekio al. 11, Vilnius"
+  boundsMinLat: 54.6875
+  boundsMaxLat: 54.691
+  boundsMinLon: 25.286
+  boundsMaxLon: 25.296
+  centerLat: 54.6893
+  centerLon: 25.291
+  buildings:
+  - code: SRK-I
+    displayName: SRK-I (Korpusas I)
+    floors: 4
+    worldPosition: {x: -50, y: 1.5, z: 60}
+    description: 
+  - code: SRC
+    displayName: SRC (Centras)
+    floors: 3
+    worldPosition: {x: 42, y: 1.5, z: 65}
+    description: 
+  - code: SRA-I
+    displayName: SRA-I (Auditorijos I)
+    floors: 4
+    worldPosition: {x: 0, y: 3, z: 40}
+    description: 
+  - code: SRK-II
+    displayName: SRK-II (Korpusas II)
+    floors: 3
+    worldPosition: {x: 52, y: 3, z: 18}
+    description: 
+  - code: SRA-II
+    displayName: SRA-II (Auditorijos II)
+    floors: 3
+    worldPosition: {x: 15, y: 6, z: -12}
+    description: 
+  - code: SRL-I
+    displayName: SRL-I (Laboratorijos I)
+    floors: 6
+    worldPosition: {x: 5, y: 7.5, z: -35}
+    description: 
+  - code: SRL-II
+    displayName: SRL-II (Laboratorijos II)
+    floors: 3
+    worldPosition: {x: -45, y: 7.5, z: -35}
+    description: 
+  routeDatabase: {fileID: 11400000, guid: 3cea379dacabe4f73904d7188a268fb0, type: 2}
