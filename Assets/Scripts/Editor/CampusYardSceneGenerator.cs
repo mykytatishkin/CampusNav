@@ -38,13 +38,8 @@ public static class CampusYardSceneGenerator
 
     static float TerrainBandWidth() => (TerrainNorthZ - TerrainSouthZ) / TerrainLevels;
 
-    static float TerrainY(float z)
-    {
-        float band = TerrainBandWidth();
-        float rel = TerrainNorthZ - z;
-        int idx = Mathf.FloorToInt(rel / band);
-        return Mathf.Clamp(idx, 0, TerrainLevels - 1) * StepHeight;
-    }
+    // Flat terrain — all buildings on the same level.
+    static float TerrainY(float z) => 0f;
 
     struct BldDef
     {
@@ -54,15 +49,64 @@ public static class CampusYardSceneGenerator
         public int Floors, RoomsPerSide;
     }
 
+    // ============================================================
+    //  Building layout based on the REAL Saulėtekio rūmai campus map.
+    //  Coordinate: +X = East, +Z = North. Terrain rises south→north.
+    //  "Jūs esate čia" (blue dot) = south-east corner, player start.
+    //
+    //  Map (top = North):
+    //         [P - North road]
+    //                   S4          S6   S7
+    //              S5         (corridors)
+    //                    S2
+    //         [P]             [P]
+    //              S1         S3
+    //                    [P]  . ← "Jūs esate čia"
+    //
+    //  S1(SRC)  = south-west,  large square
+    //  S3(SRK-I)= south-east,  long east-west building
+    //  S2(SRA-I)= center-east, between S3 and S4
+    //  S5(SRK-II)= center-west, left of S2
+    //  S4(SRA-II)= north-center, above S2
+    //  S6(SRL-II)= north-east, above S4
+    //  S7(SRL-I) = far north-east, east of S6
+    // ============================================================
     static readonly BldDef[] BldDefs =
     {
-        new() { Code = "SRK-I",   Display = "SRK-I (Korpusas I)",        W = 55, D = 18, Floors = 4, RoomsPerSide = 6, Pos = V(-50,0,60),  EntrancePos = V(-50,0,69) },
-        new() { Code = "SRC",     Display = "SRC (Centras)",              W = 28, D = 28, Floors = 3, RoomsPerSide = 4, Pos = V(42,0,65),   EntrancePos = V(42,0,79) },
-        new() { Code = "SRA-I",   Display = "SRA-I (Auditorijos I)",      W = 38, D = 22, Floors = 4, RoomsPerSide = 5, Pos = V(0,0,40),    EntrancePos = V(-19,0,40) },
-        new() { Code = "SRK-II",  Display = "SRK-II (Korpusas II)",       W = 18, D = 45, Floors = 3, RoomsPerSide = 4, Pos = V(52,0,18),   EntrancePos = V(61,0,18) },
-        new() { Code = "SRA-II",  Display = "SRA-II (Auditorijos II)",    W = 32, D = 18, Floors = 3, RoomsPerSide = 4, Pos = V(15,0,-12),  EntrancePos = V(15,0,-21) },
-        new() { Code = "SRL-I",   Display = "SRL-I (Laboratorijos I)",    W = 28, D = 18, Floors = 6, RoomsPerSide = 4, Pos = V(5,0,-35),   EntrancePos = V(5,0,-44) },
-        new() { Code = "SRL-II",  Display = "SRL-II (Laboratorijos II)",  W = 50, D = 18, Floors = 3, RoomsPerSide = 6, Pos = V(-45,0,-35), EntrancePos = V(-70,0,-35) },
+        // S1 - SRC: Centriniai rūmai (Central/Admin). South-west. Large square. Entrance from south (▲).
+        new() { Code = "SRC",     Display = "S1 - Centriniai rūmai",
+                W = 38, D = 35, Floors = 3, RoomsPerSide = 5,
+                Pos = V(-15, 0, -25),  EntrancePos = V(-15, 0, -43) },
+
+        // S2 - SRA-I: Auditorinis korpusas. Center-right, east of S5. Entrance from east (▶).
+        new() { Code = "SRA-I",   Display = "S2 - Auditorinis korpusas",
+                W = 28, D = 30, Floors = 4, RoomsPerSide = 5,
+                Pos = V(25, 0, 15),   EntrancePos = V(39, 0, 15) },
+
+        // S3 - SRK-I: Mokomasis korpusas. South-east, long building running E-W. Entrance from south (▲).
+        new() { Code = "SRK-I",   Display = "S3 - Mokomasis korpusas",
+                W = 55, D = 18, Floors = 4, RoomsPerSide = 7,
+                Pos = V(35, 0, -25),  EntrancePos = V(35, 0, -34) },
+
+        // S4 - SRA-II: Auditorinis korpusas II (Sustainability Hub). North-center, above S2.
+        new() { Code = "SRA-II",  Display = "S4 - Auditorinis korpusas II",
+                W = 25, D = 22, Floors = 3, RoomsPerSide = 4,
+                Pos = V(18, 0, 50),   EntrancePos = V(18, 0, 39) },
+
+        // S5 - SRK-II: Mokomasis korpusas II (Env. Engineering). Center-west, left of S2.
+        new() { Code = "SRK-II",  Display = "S5 - Mokomasis korpusas II",
+                W = 20, D = 30, Floors = 3, RoomsPerSide = 4,
+                Pos = V(-10, 0, 20),  EntrancePos = V(-20, 0, 20) },
+
+        // S6 - SRL-II: Laboratorinis korpusas (Fund. Sciences). North-east, above S4.
+        new() { Code = "SRL-II",  Display = "S6 - Laboratorinis korpusas II",
+                W = 22, D = 20, Floors = 3, RoomsPerSide = 4,
+                Pos = V(28, 0, 72),   EntrancePos = V(28, 0, 62) },
+
+        // S7 - SRL-I: Laboratorinis korpusas. Far north-east, east of S6.
+        new() { Code = "SRL-I",   Display = "S7 - Laboratorinis korpusas I",
+                W = 40, D = 18, Floors = 6, RoomsPerSide = 5,
+                Pos = V(60, 0, 72),   EntrancePos = V(60, 0, 63) },
     };
 
     [MenuItem("CampusNav/Generate Campus Yard Scene")]
@@ -89,35 +133,57 @@ public static class CampusYardSceneGenerator
             blds.Add(c);
         }
 
-        // ==================== OUTDOOR ====================
-        TieredGround(Child(root, "Ground"), 220, 220, 48, 12);
-        AllTerraceBoundaryPlanks(Child(root, "LevelPlanks"), 220);
+        // ==================== OUTDOOR (flat ground) ====================
+        FlatGround(root, 220, 220);
 
+        // ===== OUTDOOR PATHS =====
         var paths = Child(root, "OutdoorPaths");
-        PathEW(paths, "Road_North", -10, 85, 130, 8);
-        PathNS(paths, "Walk_CentralNS", 5, -50, 90, 8);
-        PathEW(paths, "Walk_South", -5, -45, 120, 8);
-        PathNS(paths, "Walk_West", -70, -40, 80, 8);
-        PathNS(paths, "Walk_East", 60, -15, 85, 8);
-        PathEW(paths, "Walk_Parking", -40, 40, 30, 8);
-        PathEW(paths, "Walk_SouthConnector", -20, -35, 60, 8);
-        PathNS(paths, "Walk_toSRA2", 20, -30, 0, 8);
-        PathNS(paths, "Walk_toSRK1", -50, 60, 72, 6);
-        PathNS(paths, "Walk_toSRC", 42, 65, 82, 6);
-        PathEW(paths, "Walk_toSRK2", 52, 18, 20, 5);
+        // North road
+        PathEW(paths, "Road_North", 20, 85, 140, 8);
+        // South road / parking approach
+        PathEW(paths, "Road_South", 15, -48, 120, 7);
+        // West N-S walkway (past SRC, SRK-II)
+        PathNS(paths, "Walk_WestNS", -35, -48, 30, 6);
+        // Central N-S (S3 up through S2 to S4, S6, S7)
+        PathNS(paths, "Walk_CenterNS", 25, -40, 80, 7);
+        // East N-S (along S3 east side going north)
+        PathNS(paths, "Walk_EastNS", 62, -45, 80, 5);
+        // South cross (connecting S1 to S3)
+        PathEW(paths, "Walk_SouthCross", 10, -30, 80, 6);
+        // Mid cross (connecting S5 to S2)
+        PathEW(paths, "Walk_MidCross", 5, 18, 70, 6);
+        // North cross (connecting S4 to S6/S7)
+        PathEW(paths, "Walk_NorthCross", 35, 70, 65, 5);
+        // Path to S1 entrance (south approach)
+        PathNS(paths, "Walk_toS1", -15, -48, -43, 5);
+        // Path to S3 entrance (south approach)
+        PathNS(paths, "Walk_toS3", 35, -45, -34, 5);
+        // Parking west approach
+        PathNS(paths, "Walk_ParkingW", -40, -5, 18, 5);
+        // Path from blue dot area to campus
+        PathEW(paths, "Walk_BlueDot", 25, -48, 50, 6);
 
+        // ===== BUILDINGS =====
         var bldGroup = Child(root, "Buildings");
         foreach (var b in blds)
             OutdoorBuilding(bldGroup, b.Code, b.Pos, b.W, b.D, b.Floors);
 
+        // ===== CORRIDORS =====
         var corGroup = Child(root, "Corridors");
-        Corridor(corGroup, "Cor_SRK1_SRA1", V(-22, TerrainY(51), 51), V(-10, TerrainY(51), 51), 5, F);
-        Corridor(corGroup, "Br_SRA1_SRC", V(19, TerrainY(52)+F*2, 52), V(28, TerrainY(58)+F*2, 58), 4, F);
-        Corridor(corGroup, "Br_SRA1_SRK2", V(19, TerrainY(35)+F*2, 35), V(43, TerrainY(30)+F*2, 30), 4, F);
-        Corridor(corGroup, "Cor_SRA2_SRL1", V(10, TerrainY(-21), -21), V(10, TerrainY(-26), -26), 4, F);
-        Corridor(corGroup, "Cor_SRL1_SRL2", V(-9, TerrainY(-35), -35), V(-20, TerrainY(-35), -35), 5, F);
+        // S1(SRC) ↔ S3(SRK-I): east-west at south, ground floor
+        Corridor(corGroup, "Cor_S1_S3", V(4, TerrainY(-25), -25), V(8, TerrainY(-25), -25), 5, F);
+        // S5(SRK-II) ↔ S2(SRA-I): east-west, ground floor
+        Corridor(corGroup, "Cor_S5_S2", V(0, TerrainY(18), 18), V(11, TerrainY(18), 18), 5, F);
+        // S2(SRA-I) ↔ S3(SRK-I): north-south, connecting center
+        Corridor(corGroup, "Cor_S2_S3", V(28, TerrainY(0), 0), V(28, TerrainY(-16), -16), 4, F);
+        // S2(SRA-I) ↔ S4(SRA-II): north-south
+        Corridor(corGroup, "Cor_S2_S4", V(22, TerrainY(30), 30), V(22, TerrainY(39), 39), 4, F);
+        // S4(SRA-II) ↔ S6(SRL-II): north
+        Corridor(corGroup, "Cor_S4_S6", V(25, TerrainY(61), 61), V(25, TerrainY(62), 62), 4, F);
+        // S6(SRL-II) ↔ S7(SRL-I): east-west
+        Corridor(corGroup, "Cor_S6_S7", V(39, TerrainY(72), 72), V(40, TerrainY(72), 72), 4, F);
 
-        // Entrance triggers & markers
+        // ===== ENTRANCE TRIGGERS & MARKERS =====
         var trigGroup = Child(root, "EntranceTriggers");
         var markGroup = Child(root, "EntranceMarkers");
         foreach (var b in blds)
@@ -126,15 +192,25 @@ public static class CampusYardSceneGenerator
             CreateEntranceMarker(markGroup, b);
         }
 
-        // Decorations
+        // ===== DECORATIONS =====
         var deco = Child(root, "Decorations");
-        Box(deco, "ParkingLot", V(-40, TerrainY(45)+0.05f, 45), V(25, 0.08f, 15), Col(0.35f,0.35f,0.38f));
-        for (int i = 0; i < 15; i++)
-            Tree(deco, $"Tree_{i}", V(-90+i*12, TerrainY(85), 85 + (i%3)*3));
+        // West parking (between S1 and S5)
+        Box(deco, "Parking_West", V(-38, TerrainY(0)+0.05f, 0), V(16, 0.08f, 18), Col(0.35f,0.35f,0.38f));
+        // South parking (below S1 and S3)
+        Box(deco, "Parking_South", V(20, TerrainY(-52)+0.05f, -52), V(45, 0.08f, 10), Col(0.35f,0.35f,0.38f));
+        // North parking
+        Box(deco, "Parking_North", V(0, TerrainY(88)+0.05f, 88), V(30, 0.08f, 8), Col(0.35f,0.35f,0.38f));
+        // Trees along west side
+        for (int i = 0; i < 10; i++)
+            Tree(deco, $"Tree_W{i}", V(-42, TerrainY(-40+i*12), -40+i*12));
+        // Trees along east side
+        for (int i = 0; i < 6; i++)
+            Tree(deco, $"Tree_E{i}", V(78, TerrainY(-30+i*18), -30+i*18));
 
         // ==================== INDOOR AREAS (Y=-100, spaced along X) ====================
         var indoorRoot = Child(root, "IndoorAreas");
         var indoorDataList = new List<IndoorBuildingData>();
+        var indoorGOs = new List<GameObject>();
 
         for (int bi = 0; bi < blds.Count; bi++)
         {
@@ -158,14 +234,14 @@ public static class CampusYardSceneGenerator
                 yardEntrancePosition = b.EntrancePos,
             };
             indoorDataList.Add(data);
-
-            GenerateIndoorArea(indoorRoot, data);
+            indoorGOs.Add(GenerateIndoorArea(indoorRoot, data));
         }
 
         // ==================== PLAYER ====================
         var player = new GameObject("Player");
         player.transform.SetParent(root.transform);
-        player.transform.position = V(5, TerrainY(75)+1.2f, 75);
+        // "Jūs esate čia" — blue dot, south-east of campus (below S3)
+        player.transform.position = V(45, 1.2f, -48);
         player.tag = "Player";
 
         var capsule = GameObject.CreatePrimitive(PrimitiveType.Capsule);
@@ -193,7 +269,7 @@ public static class CampusYardSceneGenerator
 
         var camCtrl = camObj.GetComponent<CampusCameraController>() ?? camObj.AddComponent<CampusCameraController>();
         camCtrl.SwitchMode(CampusCameraController.CameraMode.Free);
-        camCtrl.FocusOn(V(0, 5, 20));
+        camCtrl.FocusOn(V(45, 1, -48));
         camCtrl.SetOrbit(45, 60, 60);
         Wire(camCtrl, "target", player.transform);
 
@@ -259,6 +335,13 @@ public static class CampusYardSceneGenerator
             elem.FindPropertyRelative("roomsPerSide").intValue = d.roomsPerSide;
             elem.FindPropertyRelative("yardEntrancePosition").vector3Value = d.yardEntrancePosition;
         }
+
+        // Populate indoor root references
+        var rootsProp = imSO.FindProperty("indoorRoots");
+        rootsProp.arraySize = indoorGOs.Count;
+        for (int i = 0; i < indoorGOs.Count; i++)
+            rootsProp.GetArrayElementAtIndex(i).objectReferenceValue = indoorGOs[i];
+
         imSO.ApplyModifiedPropertiesWithoutUndo();
 
         // ==================== UI ====================
@@ -354,7 +437,7 @@ public static class CampusYardSceneGenerator
     //    +------+------+------+------+------+------+
     // ============================================================
 
-    static void GenerateIndoorArea(GameObject parent, IndoorBuildingData data)
+    static GameObject GenerateIndoorArea(GameObject parent, IndoorBuildingData data)
     {
         var bldRoot = new GameObject($"Indoor_{data.buildingCode}");
         bldRoot.transform.SetParent(parent.transform);
@@ -477,6 +560,8 @@ public static class CampusYardSceneGenerator
 
         // Building name label floating above
         AddLabel(bldRoot, "BuildingLabel", V(0, data.floors * F + 2, 0), data.buildingCode, Col(0.2f, 0.8f, 1));
+
+        return bldRoot;
     }
 
     /// <summary>Generates a corridor wall with door gaps for each room slot.</summary>
@@ -632,56 +717,26 @@ public static class CampusYardSceneGenerator
 
     // ==================== TERRAIN ====================
 
-    static void TieredGround(GameObject parent, float halfX, float halfZ, int segX, int segZPerBand)
+    // Simple flat ground plane
+    static void FlatGround(GameObject parent, float halfX, float halfZ)
     {
-        float band = TerrainBandWidth();
-        for (int i = 0; i < TerrainLevels; i++)
-        {
-            float zS = TerrainNorthZ-(i+1)*band, zN = TerrainNorthZ-i*band;
-            float zMin = Mathf.Max(-halfZ, zS), zMax = Mathf.Min(halfZ, zN);
-            if (zMax <= zMin+1e-3f) continue;
-            FlatPatch(parent, $"T{i}", -halfX, halfX, zMin, zMax, i*StepHeight, segX, segZPerBand);
-        }
-    }
-
-    static void FlatPatch(GameObject parent, string name, float x0, float x1, float zMin, float zMax, float y, int segX, int segZ)
-    {
-        int vx=segX+1, vz=segZ+1;
-        var verts = new Vector3[vx*vz]; var uvs = new Vector2[vx*vz];
-        for (int iz=0; iz<vz; iz++) { float tz=iz/(float)segZ, z=Mathf.Lerp(zMin,zMax,tz);
-            for (int ix=0; ix<vx; ix++) { float tx=ix/(float)segX; int idx=iz*vx+ix;
-                verts[idx]=new Vector3(Mathf.Lerp(x0,x1,tx),y,z); uvs[idx]=new Vector2(tx,tz); } }
-        var tris = new List<int>(segX*segZ*6);
-        for (int iz=0; iz<segZ; iz++) for (int ix=0; ix<segX; ix++)
-            { int i00=iz*vx+ix; tris.Add(i00); tris.Add(i00+vx); tris.Add(i00+1);
-              tris.Add(i00+1); tris.Add(i00+vx); tris.Add(i00+vx+1); }
-        var mesh = new Mesh{name=name}; mesh.vertices=verts; mesh.triangles=tris.ToArray(); mesh.uv=uvs; mesh.RecalculateNormals(); mesh.RecalculateBounds();
-        var go = new GameObject(name); go.transform.SetParent(parent.transform); go.isStatic=true;
-        go.AddComponent<MeshFilter>().sharedMesh=mesh;
-        var mr=go.AddComponent<MeshRenderer>(); var mat=new Material(Shader.Find("Universal Render Pipeline/Lit")??Shader.Find("Standard"));
-        if(mat.HasProperty("_BaseColor")) mat.SetColor("_BaseColor",Col(0.38f,0.52f,0.32f)); else mat.SetColor("_Color",Col(0.38f,0.52f,0.32f));
-        mat.SetFloat("_Smoothness",0.1f); mr.sharedMaterial=mat; go.AddComponent<MeshCollider>().sharedMesh=mesh;
-    }
-
-    static void AllTerraceBoundaryPlanks(GameObject parent, float halfX)
-    {
-        float band=TerrainBandWidth(), wide=halfX*2+PathLengthOverlap;
-        for (int k=1; k<TerrainLevels; k++)
-        { float zB=TerrainNorthZ-k*band, zh=BoundaryPlankDepthZ/2;
-          PathSeg(parent,$"Plank_{k}",V(0,(k-1)*StepHeight,zB+zh),V(0,k*StepHeight,zB-zh),wide,Col(0.55f,0.5f,0.48f),PlankThickness); }
+        var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        go.name = "Ground";
+        go.transform.SetParent(parent.transform);
+        go.transform.position = V(0, -0.05f, 0);
+        go.transform.localScale = V(halfX * 2, 0.1f, halfZ * 2);
+        go.isStatic = true;
+        SetMat(go, Col(0.38f, 0.52f, 0.32f));
     }
 
     // ==================== PATH HELPERS ====================
 
-    static void PathEW(GameObject p, string n, float xC, float z, float lX, float cW) { float h=lX/2; PathSeg(p,n,V(xC-h,TerrainY(z),z),V(xC+h,TerrainY(z),z),cW); }
+    static void PathEW(GameObject p, string n, float xC, float z, float lX, float cW) { float h=lX/2; PathSeg(p,n,V(xC-h,0,z),V(xC+h,0,z),cW); }
 
     static void PathNS(GameObject p, string n, float x, float z0, float z1, float cW)
     {
         float zMin=Mathf.Min(z0,z1), zMax=Mathf.Max(z0,z1);
-        var sp=new List<float>{zMin,zMax}; float band=TerrainBandWidth();
-        for(int k=1;k<TerrainLevels;k++){float b=TerrainNorthZ-k*band; if(b>zMin&&b<zMax) sp.Add(b);}
-        sp.Sort(); for(int i=0;i<sp.Count-1;i++){float za=sp[i],zb=sp[i+1]; if(zb-za<1e-4f) continue;
-            float zm=(za+zb)/2; PathSeg(p,$"{n}_{i}",V(x,TerrainY(zm),za),V(x,TerrainY(zm),zb),cW);}
+        PathSeg(p, n, V(x, 0, zMin), V(x, 0, zMax), cW);
     }
 
     static void PathSeg(GameObject p, string n, Vector3 a, Vector3 b, float cW) { PathSeg(p,n,a,b,cW,Col(0.72f,0.72f,0.68f),0.08f); }

@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRK-I
   floor: 1
   roomNumber: ST01
-  worldPosition: {x: -66.5, y: 1.6, z: 65.4}
+  worldPosition: {x: 18.5, y: 0.1, z: -19.6}
   category: 14
   description: Main stairwell SRK-I
   isAccessible: 1

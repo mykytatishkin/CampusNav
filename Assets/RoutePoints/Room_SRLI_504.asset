@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRL-I
   floor: 5
   roomNumber: 504
-  worldPosition: {x: 6.6000004, y: 21.6, z: -30.5}
+  worldPosition: {x: 62.285713, y: 14.1, z: 76.5}
   category: 8
   description: Lab in SRL-I, floor 5
   isAccessible: 1

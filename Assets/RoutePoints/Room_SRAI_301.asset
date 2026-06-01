@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRA-I
   floor: 3
   roomNumber: 301
-  worldPosition: {x: -11.4, y: 10.1, z: 34.5}
+  worldPosition: {x: 16.6, y: 7.1, z: 7.5}
   category: 2
   description: Auditorium in SRA-I, floor 3
   isAccessible: 1

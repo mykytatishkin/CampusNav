@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRK-II
   floor: 2
   roomNumber: 201
-  worldPosition: {x: 46.857143, y: 6.6, z: 6.75}
+  worldPosition: {x: -15.714286, y: 3.6, z: 12.5}
   category: 2
   description: Auditorium in SRK-II, floor 2
   isAccessible: 1

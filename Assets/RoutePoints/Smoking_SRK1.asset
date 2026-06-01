@@ -15,8 +15,8 @@ MonoBehaviour:
   pointName: Smoking_SRK1
   buildingCode: SRK-I
   floor: 0
-  roomNumber: SM01
-  worldPosition: {x: -55, y: 0, z: 72}
+  roomNumber: SM03
+  worldPosition: {x: 38, y: 0, z: -37}
   category: 12
   description: Smoking area near SRK-I entrance
   isAccessible: 1

@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRA-II
   floor: 1
   roomNumber: ST01
-  worldPosition: {x: 5.3999996, y: 6.1, z: -6.6}
+  worldPosition: {x: 10.5, y: 0.1, z: 56.6}
   category: 14
   description: Main stairwell SRA-II
   isAccessible: 1

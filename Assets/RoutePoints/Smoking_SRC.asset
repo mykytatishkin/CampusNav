@@ -15,8 +15,8 @@ MonoBehaviour:
   pointName: Smoking_SRC
   buildingCode: SRC
   floor: 0
-  roomNumber: SM02
-  worldPosition: {x: 38, y: 0, z: 82}
+  roomNumber: SM01
+  worldPosition: {x: -18, y: 0, z: -46}
   category: 12
   description: Smoking area near SRC entrance
   isAccessible: 1

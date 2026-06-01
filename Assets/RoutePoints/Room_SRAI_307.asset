@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRA-I
   floor: 3
   roomNumber: 307
-  worldPosition: {x: 11.4, y: 10.1, z: 34.5}
+  worldPosition: {x: 33.4, y: 7.1, z: 7.5}
   category: 1
   description: Classroom in SRA-I, floor 3
   isAccessible: 1

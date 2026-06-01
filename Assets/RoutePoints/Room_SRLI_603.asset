@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRL-I
   floor: 6
   roomNumber: 603
-  worldPosition: {x: 3.4, y: 25.1, z: -39.5}
+  worldPosition: {x: 57.714287, y: 17.6, z: 67.5}
   category: 7
   description: Office in SRL-I, floor 6
   isAccessible: 1

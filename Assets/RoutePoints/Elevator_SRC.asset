@@ -15,8 +15,8 @@ MonoBehaviour:
   pointName: Elevator_SRC
   buildingCode: SRC
   floor: 0
-  roomNumber: LF05
-  worldPosition: {x: 42, y: 0, z: 70}
+  roomNumber: LF01
+  worldPosition: {x: -10, y: 0, z: -25}
   category: 4
   description: SRC elevator
   isAccessible: 1

@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRA-II
   floor: 3
   roomNumber: WC3
-  worldPosition: {x: 26.2, y: 13.1, z: -5.7000003}
+  worldPosition: {x: 26.75, y: 7.1, z: 57.7}
   category: 3
   description: Restroom SRA-II floor 3
   isAccessible: 1

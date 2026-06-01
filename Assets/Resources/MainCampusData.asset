@@ -22,39 +22,39 @@ MonoBehaviour:
   centerLat: 54.6893
   centerLon: 25.291
   buildings:
-  - code: SRK-I
-    displayName: SRK-I (Korpusas I)
-    floors: 4
-    worldPosition: {x: -50, y: 1.5, z: 60}
-    description: 
   - code: SRC
-    displayName: SRC (Centras)
+    displayName: "S1 - Centriniai r\u016Bmai"
     floors: 3
-    worldPosition: {x: 42, y: 1.5, z: 65}
+    worldPosition: {x: -15, y: 0, z: -25}
     description: 
   - code: SRA-I
-    displayName: SRA-I (Auditorijos I)
+    displayName: S2 - Auditorinis korpusas
     floors: 4
-    worldPosition: {x: 0, y: 3, z: 40}
+    worldPosition: {x: 25, y: 0, z: 15}
     description: 
-  - code: SRK-II
-    displayName: SRK-II (Korpusas II)
-    floors: 3
-    worldPosition: {x: 52, y: 3, z: 18}
+  - code: SRK-I
+    displayName: S3 - Mokomasis korpusas
+    floors: 4
+    worldPosition: {x: 35, y: 0, z: -25}
     description: 
   - code: SRA-II
-    displayName: SRA-II (Auditorijos II)
+    displayName: S4 - Auditorinis korpusas II
     floors: 3
-    worldPosition: {x: 15, y: 6, z: -12}
+    worldPosition: {x: 18, y: 0, z: 50}
     description: 
-  - code: SRL-I
-    displayName: SRL-I (Laboratorijos I)
-    floors: 6
-    worldPosition: {x: 5, y: 7.5, z: -35}
+  - code: SRK-II
+    displayName: S5 - Mokomasis korpusas II
+    floors: 3
+    worldPosition: {x: -10, y: 0, z: 20}
     description: 
   - code: SRL-II
-    displayName: SRL-II (Laboratorijos II)
+    displayName: S6 - Laboratorinis korpusas II
     floors: 3
-    worldPosition: {x: -45, y: 7.5, z: -35}
+    worldPosition: {x: 28, y: 0, z: 72}
+    description: 
+  - code: SRL-I
+    displayName: S7 - Laboratorinis korpusas I
+    floors: 6
+    worldPosition: {x: 60, y: 0, z: 72}
     description: 
   routeDatabase: {fileID: 11400000, guid: 3cea379dacabe4f73904d7188a268fb0, type: 2}

@@ -15,8 +15,8 @@ MonoBehaviour:
   pointName: Elevator_SRA1
   buildingCode: SRA-I
   floor: 0
-  roomNumber: LF03
-  worldPosition: {x: -15, y: 1.5, z: 51}
+  roomNumber: LF02
+  worldPosition: {x: 20, y: 0, z: 15}
   category: 4
-  description: SRA-I corridor elevator
+  description: SRA-I elevator
   isAccessible: 1

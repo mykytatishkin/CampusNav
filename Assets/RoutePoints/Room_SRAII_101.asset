@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRA-II
   floor: 1
   roomNumber: 101
-  worldPosition: {x: 6.466666, y: 6.1, z: -16.5}
+  worldPosition: {x: 11.333334, y: 0.1, z: 44.5}
   category: 7
   description: Office in SRA-II, floor 1
   isAccessible: 1

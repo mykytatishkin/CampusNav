@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRA-I
   floor: 1
   roomNumber: WC1
-  worldPosition: {x: 13.3, y: 3.1, z: 47.7}
+  worldPosition: {x: 34.8, y: 0.1, z: 25.5}
   category: 3
   description: Restroom SRA-I floor 1
   isAccessible: 1

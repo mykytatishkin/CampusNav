@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRL-I
   floor: 3
   roomNumber: WC3
-  worldPosition: {x: 14.8, y: 14.6, z: -28.7}
+  worldPosition: {x: 74, y: 7.1, z: 78.3}
   category: 3
   description: Restroom SRL-I floor 3
   isAccessible: 1

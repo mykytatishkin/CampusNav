@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRC
   floor: 1
   roomNumber: WC1
-  worldPosition: {x: 51.8, y: 1.6, z: 74.8}
+  worldPosition: {x: -1.7000003, y: 0.1, z: -12.75}
   category: 3
   description: Restroom SRC floor 1
   isAccessible: 1

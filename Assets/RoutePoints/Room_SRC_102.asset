@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRC
   floor: 1
   roomNumber: 102
-  worldPosition: {x: 38.266666, y: 1.6, z: 72}
+  worldPosition: {x: -20.066666, y: 0.1, z: -16.25}
   category: 7
   description: Office in SRC, floor 1
   isAccessible: 1

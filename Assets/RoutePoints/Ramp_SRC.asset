@@ -15,8 +15,8 @@ MonoBehaviour:
   pointName: Ramp_SRC
   buildingCode: SRC
   floor: 0
-  roomNumber: RM02
-  worldPosition: {x: 40, y: 0, z: 79}
+  roomNumber: RM01
+  worldPosition: {x: -18, y: 0, z: -43}
   category: 10
   description: Wheelchair ramp SRC
   isAccessible: 1

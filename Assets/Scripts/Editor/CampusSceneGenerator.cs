@@ -24,11 +24,11 @@ public static class CampusSceneGenerator
 
     static float TerrainBandWidth() => (TerrainNorthZ - TerrainSouthZ) / TerrainLevels;
 
-    /// <summary>Which terrace (0 = north/low … south = higher index).</summary>
+    /// <summary>Which terrace (0 = south/low … north = higher index). Terrain rises south→north.</summary>
     static int TerrainLevelIndex(float z)
     {
         float band = TerrainBandWidth();
-        float rel = TerrainNorthZ - z;
+        float rel = z - TerrainSouthZ; // south = 0 (lowest), north = max (highest)
         int idx = Mathf.FloorToInt(rel / band);
         if (idx < 0) idx = 0;
         if (idx >= TerrainLevels) idx = TerrainLevels - 1;

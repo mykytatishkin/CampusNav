@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRL-II
   floor: 2
   roomNumber: WC2
-  worldPosition: {x: -27.5, y: 11.1, z: -28.7}
+  worldPosition: {x: 35.7, y: 3.6, z: 79}
   category: 3
   description: Restroom SRL-II floor 2
   isAccessible: 1

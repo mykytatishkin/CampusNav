@@ -15,8 +15,8 @@ MonoBehaviour:
   pointName: Entrance_SRC
   buildingCode: SRC
   floor: 0
-  roomNumber: E02
-  worldPosition: {x: 42, y: 0, z: 79}
+  roomNumber: E01
+  worldPosition: {x: -15, y: 0, z: -43}
   category: 0
-  description: SRC main entrance
+  description: "S1 - Centriniai r\u016Bmai entrance"
   isAccessible: 1

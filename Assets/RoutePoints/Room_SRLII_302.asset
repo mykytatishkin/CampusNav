@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRL-II
   floor: 3
   roomNumber: 302
-  worldPosition: {x: -56.11111, y: 14.6, z: -30.5}
+  worldPosition: {x: 23.11111, y: 7.1, z: 77}
   category: 1
   description: Classroom in SRL-II, floor 3
   isAccessible: 1

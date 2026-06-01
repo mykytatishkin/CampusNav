@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRC
   floor: 3
   roomNumber: 305
-  worldPosition: {x: 49.466667, y: 8.6, z: 58}
+  worldPosition: {x: -4.8666677, y: 7.1, z: -33.75}
   category: 1
   description: Classroom in SRC, floor 3
   isAccessible: 1

@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRK-I
   floor: 3
   roomNumber: 303
-  worldPosition: {x: -57.333332, y: 8.6, z: 55.5}
+  worldPosition: {x: 27.666668, y: 7.1, z: -29.5}
   category: 8
   description: Lab in SRK-I, floor 3
   isAccessible: 1

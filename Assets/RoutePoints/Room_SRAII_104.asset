@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRA-II
   floor: 1
   roomNumber: 104
-  worldPosition: {x: 19.266666, y: 6.1, z: -7.5}
+  worldPosition: {x: 21.333334, y: 0.1, z: 55.5}
   category: 1
   description: Classroom in SRA-II, floor 1
   isAccessible: 1

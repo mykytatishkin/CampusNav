@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRL-II
   floor: 2
   roomNumber: 201
-  worldPosition: {x: -60.555557, y: 11.1, z: -39.5}
+  worldPosition: {x: 21.155556, y: 3.6, z: 67}
   category: 2
   description: Auditorium in SRL-II, floor 2
   isAccessible: 1

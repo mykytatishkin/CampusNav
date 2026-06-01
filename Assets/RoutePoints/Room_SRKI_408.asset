@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRK-I
   floor: 4
   roomNumber: 408
-  worldPosition: {x: -32.88889, y: 12.1, z: 64.5}
+  worldPosition: {x: 52.11111, y: 10.6, z: -20.5}
   category: 8
   description: Lab in SRK-I, floor 4
   isAccessible: 1

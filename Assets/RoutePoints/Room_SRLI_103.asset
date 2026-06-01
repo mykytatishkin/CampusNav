@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRL-I
   floor: 1
   roomNumber: 103
-  worldPosition: {x: 3.4, y: 7.6, z: -39.5}
+  worldPosition: {x: 57.714287, y: 0.1, z: 67.5}
   category: 1
   description: Classroom in SRL-I, floor 1
   isAccessible: 1

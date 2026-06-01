@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRA-I
   floor: 4
   roomNumber: 404
-  worldPosition: {x: 0, y: 13.6, z: 45.5}
+  worldPosition: {x: 25, y: 10.6, z: 22.5}
   category: 8
   description: Lab in SRA-I, floor 4
   isAccessible: 1

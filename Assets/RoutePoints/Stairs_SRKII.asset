@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRK-II
   floor: 1
   roomNumber: ST01
-  worldPosition: {x: 46.6, y: 3.1, z: 31.5}
+  worldPosition: {x: -16, y: 0.1, z: 29}
   category: 14
   description: Main stairwell SRK-II
   isAccessible: 1

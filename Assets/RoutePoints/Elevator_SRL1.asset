@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRL-I
   floor: 0
   roomNumber: LF04
-  worldPosition: {x: 5, y: 6, z: -30}
+  worldPosition: {x: 55, y: 0, z: 72}
   category: 4
   description: SRL-I elevator
   isAccessible: 1

@@ -17,6 +17,7 @@ public class IndoorManager : MonoBehaviour
 
     [Header("Indoor Data")]
     [SerializeField] private List<IndoorBuildingData> buildings = new();
+    [SerializeField] private List<GameObject> indoorRoots = new(); // direct refs to Indoor_XXX objects
 
     // Runtime state
     string currentBuildingCode;
@@ -24,62 +25,70 @@ public class IndoorManager : MonoBehaviour
     bool isIndoors;
     int currentFloor = 1;
 
-    // Cached floor GameObjects for current building
-    readonly Dictionary<string, Transform[]> buildingFloorObjects = new();
-
     public bool IsIndoors => isIndoors;
     public string CurrentBuildingCode => currentBuildingCode;
     public int CurrentFloor => currentFloor;
     public List<IndoorBuildingData> Buildings => buildings;
 
-    void Start()
+    /// <summary>Get indoor root — try direct refs first, fallback to scene search.</summary>
+    Transform GetIndoorRoot(string buildingCode)
     {
-        // Cache all indoor floor objects for quick show/hide
-        CacheFloorObjects();
-    }
-
-    void CacheFloorObjects()
-    {
-        buildingFloorObjects.Clear();
-
-        // Find the IndoorAreas root
-        var indoorRoot = transform.parent?.Find("IndoorAreas");
-        if (indoorRoot == null) return;
-
-        foreach (var data in buildings)
+        // Try direct references
+        for (int i = 0; i < buildings.Count; i++)
         {
-            var bldTransform = indoorRoot.Find($"Indoor_{data.buildingCode}");
-            if (bldTransform == null) continue;
-
-            var floors = new Transform[data.floors];
-            for (int i = 0; i < data.floors; i++)
-            {
-                floors[i] = bldTransform.Find($"Floor_{i + 1}");
-            }
-            buildingFloorObjects[data.buildingCode] = floors;
+            if (buildings[i].buildingCode == buildingCode && i < indoorRoots.Count && indoorRoots[i] != null)
+                return indoorRoots[i].transform;
         }
+
+        // Fallback: search scene
+        Debug.LogWarning($"[IndoorManager] Direct ref missing for {buildingCode}, searching scene...");
+        var go = GameObject.Find($"Indoor_{buildingCode}");
+        if (go != null) return go.transform;
+
+        // Last resort: search all transforms
+        var allTransforms = Resources.FindObjectsOfTypeAll<Transform>();
+        foreach (var t in allTransforms)
+        {
+            if (t.name == $"Indoor_{buildingCode}" && t.gameObject.scene.isLoaded)
+                return t;
+        }
+
+        Debug.LogError($"[IndoorManager] CANNOT find Indoor_{buildingCode} anywhere!");
+        return null;
     }
 
-    /// <summary>Show only the current floor and below, hide floors above.</summary>
+    /// <summary>Show current floor, hide all others.</summary>
     void UpdateFloorVisibility(string buildingCode, int visibleFloor)
     {
-        if (!buildingFloorObjects.TryGetValue(buildingCode, out var floors)) return;
+        var root = GetIndoorRoot(buildingCode);
+        if (root == null) return;
 
-        for (int i = 0; i < floors.Length; i++)
+        int hidden = 0, shown = 0;
+        for (int c = 0; c < root.childCount; c++)
         {
-            if (floors[i] == null) continue;
-            // Floor index i corresponds to floor number i+1
-            // Show current floor and all below, hide all above
-            floors[i].gameObject.SetActive(i + 1 <= visibleFloor);
+            var child = root.GetChild(c);
+            if (!child.name.StartsWith("Floor_")) continue;
+            if (!int.TryParse(child.name.Substring(6), out int floorNum)) continue;
+
+            bool visible = floorNum == visibleFloor;
+            child.gameObject.SetActive(visible);
+            if (visible) shown++; else hidden++;
         }
+        Debug.Log($"[IndoorManager] {buildingCode} floor {visibleFloor}: shown={shown} hidden={hidden}");
     }
 
     /// <summary>Show all floors (used when exiting building).</summary>
     void ShowAllFloors(string buildingCode)
     {
-        if (!buildingFloorObjects.TryGetValue(buildingCode, out var floors)) return;
-        foreach (var f in floors)
-            if (f != null) f.gameObject.SetActive(true);
+        var root = GetIndoorRoot(buildingCode);
+        if (root == null) return;
+
+        for (int c = 0; c < root.childCount; c++)
+        {
+            var child = root.GetChild(c);
+            if (child.name.StartsWith("Floor_"))
+                child.gameObject.SetActive(true);
+        }
     }
 
     public void AddBuilding(IndoorBuildingData data)
@@ -104,10 +113,6 @@ public class IndoorManager : MonoBehaviour
 
         if (isIndoors) return;
 
-        // Re-cache if not cached yet (e.g. scene was just generated)
-        if (buildingFloorObjects.Count == 0)
-            CacheFloorObjects();
-
         isIndoors = true;
         currentBuildingCode = buildingCode;
         currentFloor = 1;
@@ -123,15 +128,15 @@ public class IndoorManager : MonoBehaviour
         // Show only floor 1
         UpdateFloorVisibility(buildingCode, 1);
 
-        // Focus camera on indoor area
+        // Focus camera on indoor area — top-down view
         if (cameraController != null)
         {
             cameraController.FocusOn(spawnPos);
-            cameraController.SetOrbit(0, 50f, 25f);
+            cameraController.SetOrbit(0, 70f, 30f);
             cameraController.SwitchMode(CampusCameraController.CameraMode.Follow);
         }
 
-        Debug.Log($"[IndoorManager] Entered {buildingCode}, showing floor 1");
+        Debug.Log($"[IndoorManager] Entered {buildingCode}, spawned at {spawnPos}");
     }
 
     /// <summary>Teleport player back to the yard.</summary>

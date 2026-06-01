@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRK-I
   floor: 4
   roomNumber: 405
-  worldPosition: {x: -47.555553, y: 12.1, z: 55.5}
+  worldPosition: {x: 37.444447, y: 10.6, z: -29.5}
   category: 7
   description: Office in SRK-I, floor 4
   isAccessible: 1

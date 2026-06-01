@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRL-II
   floor: 2
   roomNumber: 205
-  worldPosition: {x: -42.77778, y: 11.1, z: -39.5}
+  worldPosition: {x: 28.977777, y: 3.6, z: 67}
   category: 1
   description: Classroom in SRL-II, floor 2
   isAccessible: 1

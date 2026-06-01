@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRK-I
   floor: 3
   roomNumber: 301
-  worldPosition: {x: -67.111115, y: 8.6, z: 55.5}
+  worldPosition: {x: 17.88889, y: 7.1, z: -29.5}
   category: 2
   description: Auditorium in SRK-I, floor 3
   isAccessible: 1

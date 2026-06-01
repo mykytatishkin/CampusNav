@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRL-II
   floor: 1
   roomNumber: 102
-  worldPosition: {x: -56.11111, y: 7.6, z: -30.5}
+  worldPosition: {x: 23.11111, y: 0.1, z: 77}
   category: 7
   description: Office in SRL-II, floor 1
   isAccessible: 1

@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRL-I
   floor: 3
   roomNumber: 306
-  worldPosition: {x: 13, y: 14.6, z: -30.5}
+  worldPosition: {x: 71.42857, y: 7.1, z: 76.5}
   category: 8
   description: Lab in SRL-I, floor 3
   isAccessible: 1

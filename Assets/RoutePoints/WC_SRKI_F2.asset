@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRK-I
   floor: 2
   roomNumber: WC2
-  worldPosition: {x: -30.75, y: 5.1, z: 66.3}
+  worldPosition: {x: 54.25, y: 3.6, z: -18.7}
   category: 3
   description: Restroom SRK-I floor 2
   isAccessible: 1

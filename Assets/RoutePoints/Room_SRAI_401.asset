@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRA-I
   floor: 4
   roomNumber: 401
-  worldPosition: {x: -11.4, y: 13.6, z: 34.5}
+  worldPosition: {x: 16.6, y: 10.6, z: 7.5}
   category: 7
   description: Office in SRA-I, floor 4
   isAccessible: 1

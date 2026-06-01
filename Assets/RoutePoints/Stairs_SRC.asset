@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRC
   floor: 1
   roomNumber: ST01
-  worldPosition: {x: 33.6, y: 1.6, z: 73.4}
+  worldPosition: {x: -26.4, y: 0.1, z: -14.5}
   category: 14
   description: Main stairwell SRC
   isAccessible: 1

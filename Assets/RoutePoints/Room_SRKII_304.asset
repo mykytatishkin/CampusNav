@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRK-II
   floor: 3
   roomNumber: 304
-  worldPosition: {x: 53.028572, y: 10.1, z: 29.25}
+  worldPosition: {x: -8.857142, y: 7.1, z: 27.5}
   category: 1
   description: Classroom in SRK-II, floor 3
   isAccessible: 1

@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRA-I
   floor: 3
   roomNumber: 303
-  worldPosition: {x: -3.8, y: 10.1, z: 34.5}
+  worldPosition: {x: 22.2, y: 7.1, z: 7.5}
   category: 8
   description: Lab in SRA-I, floor 3
   isAccessible: 1

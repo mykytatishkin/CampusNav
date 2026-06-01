@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRC
   floor: 3
   roomNumber: 303
-  worldPosition: {x: 42, y: 8.6, z: 58}
+  worldPosition: {x: -15, y: 7.1, z: -33.75}
   category: 8
   description: Lab in SRC, floor 3
   isAccessible: 1

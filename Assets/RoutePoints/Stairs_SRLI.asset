@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRL-I
   floor: 1
   roomNumber: ST01
-  worldPosition: {x: -3.4000003, y: 7.6, z: -29.6}
+  worldPosition: {x: 48, y: 0.1, z: 77.4}
   category: 14
   description: Main stairwell SRL-I
   isAccessible: 1

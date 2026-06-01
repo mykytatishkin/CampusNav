@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingCode: SRC
   floor: 2
   roomNumber: 204
-  worldPosition: {x: 45.733334, y: 5.1, z: 72}
+  worldPosition: {x: -9.933332, y: 3.6, z: -16.25}
   category: 1
   description: Classroom in SRC, floor 2
   isAccessible: 1

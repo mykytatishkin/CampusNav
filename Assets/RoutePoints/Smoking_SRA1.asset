@@ -15,8 +15,8 @@ MonoBehaviour:
   pointName: Smoking_SRA1
   buildingCode: SRA-I
   floor: 0
-  roomNumber: SM03
-  worldPosition: {x: -22, y: 1.5, z: 43}
+  roomNumber: SM02
+  worldPosition: {x: 42, y: 0, z: 13}
   category: 12
-  description: Smoking area near SRA-I
+  description: Smoking area near SRA-I entrance
   isAccessible: 1
